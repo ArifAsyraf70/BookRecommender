@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="faq-container">
+    <h1>Frequently Asked Questions</h1>
+    <div class="faq-list">
+        <div class="faq-item">
+            <button class="faq-question">What is the purpose of this book recommender system?</button>
+            <div class="faq-answer">
+                <p>This system helps you discover books align to your interests. Using advanced algorithms, it recommends books based on the content of books you like.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">How does the system recommend books?</button>
+            <div class="faq-answer">
+                <p>The system analyzes book descriptions and categories using TF-IDF to understand word importance. It then calculates similarities between books to suggest the best matches.</p>
+            </div>
+        </div>
+
+        <!-- <div class="faq-item">
+            <button class="faq-question">Can I search for multiple books to get recommendations?</button>
+            <div class="faq-answer">
+                <p>Yes! Enter multiple book titles separated by commas, and the system will use all the information to generate personalized recommendations.</p>
+            </div>
+        </div> -->
+
+        <div class="faq-item">
+            <button class="faq-question">Where does the book data come from?</button>
+            <div class="faq-answer">
+                <p>The data is sourced from a dataset containing titles, authors, categories, and descriptions. This dataset is the foundation of the recommendations.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Can the system recommend books outside the dataset?</button>
+            <div class="faq-answer">
+                <p>Currently, no. The recommendations are limited to the dataset provided. However, future versions may integrate external APIs for broader suggestions.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">What happens if no books match my query?</button>
+            <div class="faq-answer">
+                <p>If no matches are found, the system will notify you and suggest refining your search query. Try entering different keywords or book titles.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inline JavaScript -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const faqQuestions = document.querySelectorAll(".faq-question");
+
+    faqQuestions.forEach((button) => {
+        button.addEventListener("click", () => {
+            const answer = button.nextElementSibling;
+
+            // Toggle the visibility of the answer
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+            } else {
+                answer.style.display = "block";
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

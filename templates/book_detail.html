@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="book-detail">
+        <div class="book-image">
+            <a href="/book/{{ book.index }}"></a>
+            <img src="{{ book.thumbnail if book.thumbnail else url_for('static', filename='images/none.JPG') }}"alt="{{ book.title }}"onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/none.JPG') }}';">
+
+       
+            </a>
+        </div>
+        <div class="book-info">
+            <h1>{{ book.title }}</h1>
+            <p><strong>Author(s):</strong> {{ book.authors }}</p>
+            <p><strong>Category:</strong> {{ book.categories }}</p>
+            <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+            <p><strong>Published Year:</strong> {{ book.published_year }}</p>
+            <p><strong>Number of Pages:</strong> {{ book.number_of_pages }}</p>
+            <p><strong>Average Rating:</strong> ⭐ {{ book.average_rating }}</p>
+            
+
+            <!-- Add to Reading History Button -->
+            <form action="/log_book" method="post" style="margin-top: 20px;">
+                <input type="hidden" name="book_id" value="{{ book.index }}">
+                <input type="hidden" name="title" value="{{ book.title }}">
+                <input type="hidden" name="author" value="{{ book.authors }}">
+                <input type="hidden" name="category" value="{{ book.categories }}">
+                <input type="hidden" name="thumbnail" value="{{ book.thumbnail }}">
+                <input type="hidden" name="average_rating" value="{{ book.average_rating }}">
+                <button type="submit" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 10px; font-family: 'Poppins', sans-serif; cursor: pointer;">
+                    Add to Reading List
+                </button>
+            </form>
+            <br>
+            
+            
+
+
+             <!-- Button to redirect to the recommender page -->
+        <a href="/recommender?title={{ book.title|urlencode }}" style="padding: 10px 20px; background-color: #428A9B; color: white; text-decoration: none; border-radius: 10px; font-family: 'Poppins', sans-serif;">
+        Get Recommendations Based on This Book
+        </a>
+
+        </div>
+    </div>
+    
+
+    <!-- Description Section -->
+    <div class="book-description">
+        <h2>Description</h2>
+        <p>{{ book.description }}</p>
+    </div>
+</div>
+{% endblock %}

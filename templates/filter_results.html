@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Books in Genre: "{{ genre }}"</h1>
+
+    {% if error %}
+    <p class="error" style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if books %}
+    <div class="grid">
+        {% for book in books %}
+        <div class="book-card">
+            <a href="/book/{{ book.index }}">
+                <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
+            </a>
+            <h2><a href="/book/{{ book.index }}">{{ book.title }}</a></h2>
+            <p>By: {{ book.authors }}</p>
+            <p>Category: {{ book.categories }}</p>
+            <p>Rating: ⭐ {{ book.average_rating }}</p>
+
+
+            <form action="/log_book" method="post">
+                <input type="hidden" name="book_id" value="{{ book.index }}">
+                <input type="hidden" name="title" value="{{ book.title }}">
+                <input type="hidden" name="author" value="{{ book.authors }}">
+                <input type="hidden" name="category" value="{{ book.categories }}">
+                <input type="hidden" name="thumbnail" value="{{ book.thumbnail }}">
+                <input type="hidden" name="average_rating" value="{{ book.average_rating }}">
+                <button type="submit" class="add-to-history-btn">Add to Reading List</button>
+            </form>
+            
+
+
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No books found for the specified genre.</p>
+    {% endif %}
+</div>
+{% endblock %}

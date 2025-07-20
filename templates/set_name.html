@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Your Name</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: url('{{ url_for("static", filename="images/bg.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .set-name-box {
+            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%; /* Responsive width */
+            position: relative;
+        }
+
+        .set-name-box .logo {
+            max-height: 70px;
+            margin-bottom: 20px;
+        }
+
+        .set-name-box h1 {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .set-name-box p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .set-name-box input {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            width: 100%;
+        }
+
+        .set-name-box button {
+            padding: 12px 20px;
+            background-color: #428A9B;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .set-name-box button:hover {
+            background-color: #357387;
+        }
+    </style>
+</head>
+<body>
+    <!-- Name input form -->
+    <div class="set-name-box">
+        <!-- Logo inside the box -->
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+        <h1>Welcome!</h1>
+        <p>Enter your name for a personalized experience.</p>
+        <form action="/set_name" method="post">
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</body>
+</html>

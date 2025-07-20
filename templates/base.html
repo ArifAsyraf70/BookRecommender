@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <header class="navbar">
+        <div class="logo-container">
+            <a href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo" style="max-height: 100px; width: auto; display: block; margin: 10px;">
+            </a>
+        </div>
+    
+        <nav>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; gap: 15px;">
+                <li><a href="/" style="font-weight: bold;">Home</a></li>
+    
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" style="font-weight: bold;">Genre</a>
+                    <div class="dropdown-content">
+                        <a href="/filter_by_genre?genre=Fiction">Fiction</a>
+                        <a href="/filter_by_genre?genre=Fantasy">Fantasy</a>
+                        <a href="/filter_by_genre?genre=Romance">Romance</a>
+                        <a href="/filter_by_genre?genre=Drama">Drama</a>
+                        <a href="/filter_by_genre?genre=Horror">Horror</a>
+                        <a href="/filter_by_genre?genre=Science Fiction">Science Fiction</a>
+                        <a href="/filter_by_genre?genre=Biography">Biography</a>
+                        <a href="/filter_by_genre?genre=History">History</a>
+                        <a href="/filter_by_genre?genre=Poetry">Poetry</a>
+                        <a href="/filter_by_genre?genre=Mystery">Mystery</a>
+                    </div>
+                </li>
+    
+                <li><a href="/recommender" style="font-weight: bold;">Recommender</a></li>
+                <li><a href="/reading_history" style="font-weight: bold;">Reading List</a></li>
+                <li><a href="/faqs" style="font-weight: bold;">FAQs</a></li>
+    
+                
+            </ul>
+        </nav>
+    
+        <!-- Centered Search Bar -->
+        <div class="search-container" style="position: relative; display: flex; justify-content: center; margin-top: 20px;">
+            <form action="/search" method="get" class="search-bar" style="display: flex; align-items: center; border: 2px solid #428A9B; border-radius: 25px; overflow: hidden; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                <input
+                    type="text"
+                    name="query"
+                    id="search-input"
+                    placeholder="Search for a book"
+                    autocomplete="off"
+                    style="border: none; padding: 10px 15px; width: 300px; font-size: 16px; outline: none; font-family: 'Poppins', sans-serif;"
+                />
+                <select name="search_by" style="border: none; padding: 10px; font-size: 16px; font-family: 'Poppins', sans-serif; outline: none; background-color: #f9f9f9; cursor: pointer;">
+                    <option value="title">Book Title</option>
+                    <option value="author">Author Name</option>
+                </select>
+                <button type="submit" style="border: none; background-color: #428A9B; color: white; font-family: 'Poppins', sans-serif; font-size: 16px; padding: 10px 20px; cursor: pointer; transition: background-color 0.3s;">
+                    Search
+                </button>
+            </form>
+        </div>
+
+        {% if user_name %}
+                
+            <a href="/logout" style="border: none; background-color: #f44d4d; color: white; font-family: 'Poppins', sans-serif; font-size: 14px; padding: 8px 15px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+                Logout
+            </a>
+                
+        {% endif %}
+    </header>
+    
+
+    <main>
+        {% block content %}
+        <!-- Child templates will inject their content here -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer Section -->
+    <footer style="background-color: #428A9B; color: white; padding: 20px; text-align: center; margin-top: 20px; font-family: 'Poppins', sans-serif;">
+        <p>&copy; 2025 Property of Arif Asyraf. All rights reserved.</p>
+        <p>
+            <a href="https://www.instagram.com/_arifasyraf_/" target="_blank" style="color: white; text-decoration: none; margin-right: 15px;">
+                Instagram
+            </a>
+            <a href="https://www.youtube.com/@ArifAsyraf_" target="_blank" style="color: white; text-decoration: none; margin-right: 15px;">
+                YouTube
+            </a>
+            <a href="https://www.linkedin.com/in/arif-asyraf-b4544b347/" target="_blank" style="color: white; text-decoration: none;">
+                LinkedIn
+            </a>
+        </p>
+    </footer>
+
+
+    <div id="flash-container" class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message alert-{{ category }}" style="padding: 10px; margin: 10px; border-radius: 5px; background-color: {% if category == 'success' %}#d4edda{% elif category == 'info' %}#d1ecf1{% else %}#f8d7da{% endif %}; color: {% if category == 'success' %}#155724{% elif category == 'info' %}#0c5460{% else %}#721c24{% endif %};">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <script>
+        // Automatically remove flash messages after 2 seconds
+        setTimeout(() => {
+            const flashContainer = document.getElementById('flash-container');
+            if (flashContainer) {
+                flashContainer.style.transition = 'opacity 0.5s ease-out';
+                flashContainer.style.opacity = '0';
+                setTimeout(() => flashContainer.remove(), 500); // Remove from DOM after fade-out
+            }
+        }, 2000); // Show for 2 seconds
+    </script>
+
+</body>
+</html>

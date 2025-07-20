@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="recommender-container">
+    <h1>Find Your Next Book</h1>
+    <form action="/recommender" method="get" style="position: relative;">
+        <input
+            type="text"
+            name="title"
+            id="recommender-search-input"
+            placeholder="Enter a book title..."
+            autocomplete="off"
+            required
+        />
+        <ul id="recommender-suggestions" class="suggestions"></ul>
+        <button type="submit">Find Recommendations</button>
+    </form>
+</div>
+
+{% if book_details %}
+<div class="current-book">
+    <a href="/book/{{ book_details.index }}"> <!-- Wrap the image in an anchor tag -->
+        <img src="{{ book_details.thumbnail if book_details.thumbnail and book_details.thumbnail != 'nan' else url_for('static', filename='images/none.JPG') }}" alt="{{ book_details.title }}">
+    </a>
+    <div class="book-details">
+        <h2>{{ book_details.title }}</h2>
+        <p><strong>By:</strong> {{ book_details.authors }}</p>
+        <p><strong>Category:</strong> {{ book_details.categories }}</p>
+        <p><strong>Rating:</strong> ⭐ {{ book_details.average_rating }}</p>
+    </div>
+</div>
+{% endif %}
+
+<div class="recommendation-results">
+    <h2>Recommendations Based on "{{ book_title }}"</h2>
+    
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if recommendations %}
+    <div class="grid">
+        {% for book in recommendations %}
+        <div class="book-card">
+            <a href="/book/{{ book.index }}">
+                <!-- Improved thumbnail logic -->
+                <img src="{{ book.thumbnail if book.thumbnail and book.thumbnail != 'nan' else url_for('static', filename='images/none.JPG') }}" alt="{{ book.title }}">
+
+            </a>
+            <h2><a href="/book/{{ book.index }}">{{ book.title }}</a></h2>
+            <p>By: {{ book.authors or 'Unknown Author' }}</p>
+            <p>Category: {{ book.categories or 'Unknown Category' }}</p>
+            <p>Rating: ⭐ {{ book.average_rating or '0.0' }}</p>
+        </div>
+
+        
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>No recommendations available.</p>
+    {% endif %}
+
+    
+
+</div>
+
+
+
+<script>
+    const searchInput = document.getElementById("recommender-search-input");
+    const suggestionsList = document.getElementById("recommender-suggestions");
+
+    searchInput.addEventListener("input", async () => {
+        const query = searchInput.value.trim();
+        if (query.length < 2) {
+            suggestionsList.innerHTML = ""; // Clear suggestions if query is too short
+            suggestionsList.style.display = "none";
+            return;
+        }
+
+        // Fetch suggestions from the backend
+        const response = await fetch(`/search_suggestions?query=${encodeURIComponent(query)}&search_by=title`);
+        const suggestions = await response.json();
+
+        // Display suggestions
+        suggestionsList.innerHTML = suggestions
+            .map(suggestion => `<li onclick="selectSuggestion('${suggestion}')">${suggestion}</li>`)
+            .join("");
+        suggestionsList.style.display = "block";
+    });
+
+    function selectSuggestion(suggestion) {
+        searchInput.value = suggestion; // Set input value to selected suggestion
+        suggestionsList.innerHTML = ""; // Clear suggestions
+        suggestionsList.style.display = "none";
+    }
+
+    // Hide suggestions when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+            suggestionsList.style.display = "none";
+        }
+    });
+</script>
+{% endblock %}

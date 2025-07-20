@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Reading List</h2>
+    <div class="grid">
+        {% if reading_history %}
+            {% for book in reading_history %}
+            <div class="book-card">
+                <!-- Use book_id to link to the book detail page -->
+                <a href="/book/{{ book.book_id }}" style="text-decoration: none; color: inherit;">
+                    <img src="{{ book.thumbnail or 'static/images/none.JPG' }}" alt="{{ book.title }}">
+                    <h2>{{ book.title }}</h2>
+                    <p><strong>By:</strong> {{ book.author }}</p>
+                    <p><strong>Category:</strong> {{ book.category }}</p>
+                    <p><strong>Rating:</strong> ⭐ {{ book.average_rating }}</p>
+                </a>
+                <!-- Clear Button -->
+                <form action="/remove_from_history" method="post" style="margin-top: 10px;">
+                    <input type="hidden" name="book_index" value="{{ loop.index0 }}">
+                    <button type="submit" onclick="return confirm('Are you sure you want to remove this book?')" style="padding: 5px 10px; border: none; background-color: #f44336; color: white; cursor: pointer; border-radius: 5px;">
+                        Clear
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No books in your reading list yet. Start adding some!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

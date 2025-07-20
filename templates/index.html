@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+
+    <div class="container">
+
+        <!-- Flash Welcome Message -->
+        {% if user_name %}
+        <div id="welcome-popup" class="welcome-popup">
+            Welcome back, {{ user_name }}!
+        </div>
+        {% else %}
+        <div class="greeting" style="background-color: #428A9B; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; font-family: 'Poppins', sans-serif; color: #ffffff; font-weight: 600; font-size: 24px;">Welcome to the Book Recommender!</h2>
+            <p style="margin-top: 10px; font-family: 'Poppins', sans-serif; font-size: 16px; color: #ffffff;">
+                <a href="/set_name" style="color: #000000; text-decoration: none; font-weight: 600;">Tell us your name</a> for a personalized experience!
+            </p>
+        </div>
+        {% endif %}
+    
+        <!-- Flash Welcome Message Styles -->
+        <style>
+            .welcome-popup {
+                position: fixed;
+                top: 20px; /* Distance from the top of the screen */
+                left: 20px; /* Distance from the left of the screen */
+                background-color: #428A9B;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                opacity: 1;
+                animation: fadeOut 5s ease-in-out forwards;
+            }
+    
+            @keyframes fadeOut {
+                0% { opacity: 1; }
+                80% { opacity: 0.8; }
+                100% { opacity: 0; }
+            }
+        </style>
+    
+        <!-- Flash Welcome Message Script -->
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                setTimeout(() => {
+                    const popup = document.getElementById("welcome-popup");
+                    if (popup) {
+                        popup.remove(); // Remove the popup after the animation ends
+                    }
+                }, 5000); // 5 seconds
+            });
+        </script>
+    </div>
+    
+    
+    
+
+    
+
+    <!-- Random Recommendations -->
+    <center><h1>Feeling Lucky</h1></center>
+    <div class="grid feeling-lucky">
+        {% for book in random_books %}
+        <div class="book-card">
+            <a href="/book/{{ book.index }}">
+                <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
+            </a>
+            <h2><a href="/book/{{ book.index }}">{{ book.title }}</a></h2>
+            <p>By: {{ book.authors }}</p>
+            <p>Category: {{ book.categories }}</p>
+            <p>Rating: ⭐ {{ book.average_rating }}</p>
+
+            <form action="/log_book" method="post">
+                <input type="hidden" name="book_id" value="{{ book.index }}">
+                <input type="hidden" name="title" value="{{ book.title }}">
+                <input type="hidden" name="author" value="{{ book.authors }}">
+                <input type="hidden" name="category" value="{{ book.categories }}">
+                <input type="hidden" name="thumbnail" value="{{ book.thumbnail }}">
+                <input type="hidden" name="average_rating" value="{{ book.average_rating }}">
+                <button type="submit" class="add-to-history-btn">Add to Reading List</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginated Books -->
+    <center><h1>All Books (Page {{ current_page }} of {{ total_pages }})</h1></center>
+    <div class="grid">
+        {% for book in books %}
+        <div class="book-card">
+            <a href="/book/{{ book.index }}">
+                <img src="{{ book.thumbnail }}" alt="{{ book.title }}">
+            </a>
+            <h2><a href="/book/{{ book.index }}">{{ book.title }}</a></h2>
+            <p>By: {{ book.authors }}</p>
+            <p>Category: {{ book.categories }}</p>
+            <p>Rating: ⭐ {{ book.average_rating }}</p>
+
+            <form action="/log_book" method="post">
+                <input type="hidden" name="book_id" value="{{ book.index }}">
+                <input type="hidden" name="title" value="{{ book.title }}">
+                <input type="hidden" name="author" value="{{ book.authors }}">
+                <input type="hidden" name="category" value="{{ book.categories }}">
+                <input type="hidden" name="thumbnail" value="{{ book.thumbnail }}">
+                <input type="hidden" name="average_rating" value="{{ book.average_rating }}">
+                <button type="submit" class="add-to-history-btn">Add to Reading List</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Links -->
+    <div class="pagination">
+        {% if previous_page %}
+        <a href="/?page={{ previous_page }}">Previous</a>
+        {% endif %}
+        <span class="current-page">Page {{ current_page }} of {{ total_pages }}</span>
+        {% if next_page %}
+        <a href="/?page={{ next_page }}">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

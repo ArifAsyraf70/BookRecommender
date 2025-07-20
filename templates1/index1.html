@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Recommender</title>
+</head>
+<body>
+    <h1>Book Recommender System</h1>
+    <input type="text" id="bookTitle" placeholder="Enter book title" onkeyup="getSearchSuggestions()">
+    <ul id="searchSuggestions"></ul>
+    <button onclick="getRecommendations()">Get Recommendations</button>
+    <ul id="recommendations"></ul>
+
+    <script>
+        async function getRecommendations() {
+            const title = document.getElementById('bookTitle').value;
+            const response = await fetch(`/recommend?title=${title}`);
+            const data = await response.json();  // This will give you the whole JSON response
+            const recommendations = document.getElementById('recommendations');
+            
+            // Check if there are recommendations in the response
+            if (data.recommendations) {
+                recommendations.innerHTML = data.recommendations.map(book => `<li>${book}</li>`).join('');
+            } else {
+                recommendations.innerHTML = '<li>No recommendations found</li>';
+            }
+        }
+    </script>
+
+<script>
+    async function getSearchSuggestions() {
+        const query = document.getElementById('bookTitle').value;
+        if (query.length < 2) {
+            document.getElementById('searchSuggestions').innerHTML = '';
+            return;
+        }
+        const response = await fetch(`/search_suggestions?query=${query}`);
+        const suggestions = await response.json();
+        const suggestionBox = document.getElementById('searchSuggestions');
+        suggestionBox.innerHTML = suggestions.map(title => `<li onclick="selectSuggestion('${title}')">${title}</li>`).join('');
+    }
+
+    function selectSuggestion(title) {
+        document.getElementById('bookTitle').value = title;
+        document.getElementById('searchSuggestions').innerHTML = '';
+    }
+
+    async function getRecommendations() {
+        const title = document.getElementById('bookTitle').value;
+        const response = await fetch(`/recommend?title=${title}`);
+        const data = await response.json();
+        const recommendations = document.getElementById('recommendations');
+        recommendations.innerHTML = data.recommendations
+            .map(book => `<li><img src="${book.thumbnail}" alt="${book.title}" style="width:50px;height:75px;"> ${book.title}</li>`)
+            .join('');
+    }
+</script>
+
+
+
+<h2>Search by Category</h2>
+<input type="text" id="category" placeholder="Enter category">
+<button onclick="getCategoryRecommendations()">Get Category Recommendations</button>
+<ul id="categoryRecommendations"></ul>
+
+<script>
+    async function getCategoryRecommendations() {
+        const category = document.getElementById('category').value;
+        const response = await fetch(`/recommend_by_category?category=${category}`);
+        const data = await response.json();
+        const recommendations = document.getElementById('categoryRecommendations');
+        
+        if (data.recommendations) {
+            recommendations.innerHTML = data.recommendations.map(book => `<li>${book}</li>`).join('');
+        } else {
+            recommendations.innerHTML = `<li>${data.error}</li>`;
+        }
+    }
+</script>
+
+
+
+<style>
+    #searchSuggestions {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        border: 1px solid #ddd;
+        max-width: 300px;
+    }
+    #searchSuggestions li {
+        padding: 5px;
+        cursor: pointer;
+        background: #fff;
+    }
+    #searchSuggestions li:hover {
+        background: #f0f0f0;
+    }
+    #recommendations img {
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+</style>
+
+    
+</body>
+</html>
